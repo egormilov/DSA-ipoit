@@ -1,6 +1,9 @@
 package by.it.group410972.damarad.lesson02;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 /*
 Даны интервальные события events
@@ -32,9 +35,17 @@ public class B_Sheduler {
         List<Event> result;
         result = new ArrayList<>();
         //ваше решение.
+        Arrays.sort(events, Comparator.comparingInt(e -> e.stop));
 
+        int currentTime = from;
 
-        return result;          //вернем итог
+        for (Event event : events) {
+            if (event.start >= currentTime && event.stop <= to) {
+                result.add(event);
+                currentTime = event.stop;
+            }
+        }
+        return result;         //вернем итог
     }
 
     //событие у аудитории(два поля: начало и конец)

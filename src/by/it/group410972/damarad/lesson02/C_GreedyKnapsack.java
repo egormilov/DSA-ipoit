@@ -15,6 +15,7 @@ package by.it.group410972.damarad.lesson02;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class C_GreedyKnapsack {
@@ -50,6 +51,23 @@ public class C_GreedyKnapsack {
 
         //ваше решение.
 
+        Arrays.sort(items);
+
+        int weightLeft = W;
+
+        for (Item item : items) {
+            if (weightLeft == 0)
+                break;
+
+            if (item.weight <= weightLeft) {
+                result += item.cost;
+                weightLeft -= item.weight;
+            } else {
+                double fraction = (double) weightLeft / item.weight;
+                result += item.cost * fraction;
+                weightLeft = 0;
+            }
+        }
 
         System.out.printf("Удалось собрать рюкзак на сумму %f\n", result);
         return result;
@@ -76,8 +94,10 @@ public class C_GreedyKnapsack {
         public int compareTo(Item o) {
             //тут может быть ваш компаратор
 
+            double thisRatio = (double) this.cost / this.weight;
+            double otherRatio = (double) o.cost / o.weight;
 
-            return 0;
+            return Double.compare(otherRatio, thisRatio);
         }
     }
 }

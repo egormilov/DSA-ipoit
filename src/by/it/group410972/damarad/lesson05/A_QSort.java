@@ -60,7 +60,9 @@ public class A_QSort {
         //читаем сами отрезки
         for (int i = 0; i < n; i++) {
             //читаем начало и конец каждого отрезка
-            segments[i] = new Segment(scanner.nextInt(), scanner.nextInt());
+            int a = scanner.nextInt();
+            int b = scanner.nextInt();
+            segments[i] = new Segment(Math.min(a, b), Math.max(a, b));
         }
         //читаем точки
         for (int i = 0; i < m; i++) {
@@ -68,7 +70,19 @@ public class A_QSort {
         }
         //тут реализуйте логику задачи с применением быстрой сортировки
         //в классе отрезка Segment реализуйте нужный для этой задачи компаратор
+        quickSort(segments, 0, segments.length - 1);
 
+        for (int i = 0; i < m; i++) {
+            int count = 0;
+            for (Segment seg : segments) {
+                if (seg.start > points[i])
+                    break;
+                if (points[i] >= seg.start && points[i] <= seg.stop) {
+                    count++;
+                }
+            }
+            result[i] = count;
+        }
 
         //!!!!!!!!!!!!!!!!!!!!!!!!!     КОНЕЦ ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!!
         return result;
@@ -93,5 +107,31 @@ public class A_QSort {
             return 0;
         }
     }
+
+    void quickSort(Segment[] arr, int low, int high) {
+        if (low < high) {
+            int pi = partition(arr, low, high);
+            quickSort(arr, low, pi - 1);
+            quickSort(arr, pi + 1, high);
+        }
+    }
+
+    int partition(Segment[] arr, int low, int high) {
+        Segment pivot = arr[high];
+        int i = low - 1;
+        for (int j = low; j < high; j++) {
+            if (arr[j].compareTo(pivot) <= 0) {
+                i++;
+                Segment temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+        Segment temp = arr[i + 1];
+        arr[i + 1] = arr[high];
+        arr[high] = temp;
+        return i + 1;
+    }
+
 
 }

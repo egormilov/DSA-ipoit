@@ -54,11 +54,53 @@ public class C_GetInversions {
         for (int i = 0; i < n; i++) {
             a[i] = scanner.nextInt();
         }
-        int result = 0;
         //!!!!!!!!!!!!!!!!!!!!!!!!     тут ваше решение   !!!!!!!!!!!!!!!!!!!!!!!!
 
 
         //!!!!!!!!!!!!!!!!!!!!!!!!!     КОНЕЦ ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!!
-        return result;
+        return countInversions(a, 0, n - 1);
+    }
+
+    int countInversions(int[] a, int left, int right) {
+        int count = 0;
+        if (left < right) {
+            int mid = (left + right) / 2;
+            count += countInversions(a, left, mid);
+            count += countInversions(a, mid + 1, right);
+            count += mergeAndCount(a, left, mid, right);
+        }
+        return count;
+    }
+
+    int mergeAndCount(int[] a, int left, int mid, int right) {
+        int n1 = mid - left + 1;
+        int n2 = right - mid;
+
+        int[] L = new int[n1];
+        int[] R = new int[n2];
+
+        for (int i = 0; i < n1; i++)
+            L[i] = a[left + i];
+        for (int i = 0; i < n2; i++)
+            R[i] = a[mid + 1 + i];
+
+        int i = 0, j = 0, k = left, swaps = 0;
+
+        while (i < n1 && j < n2) {
+            if (L[i] <= R[j]) {
+                a[k++] = L[i++];
+            } else {
+                a[k++] = R[j++];
+                swaps += (n1 - i); // вот здесь считаем количество инверсий
+            }
+        }
+
+        while (i < n1)
+            a[k++] = L[i++];
+
+        while (j < n2)
+            a[k++] = R[j++];
+
+        return swaps;
     }
 }

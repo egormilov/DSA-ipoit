@@ -2,6 +2,9 @@ package by.it.group410972.damarad.lesson06;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Scanner;
 
 /*
@@ -56,11 +59,46 @@ public class C_LongNotUpSubSeq {
             m[i] = scanner.nextInt();
         }
         //тут реализуйте логику задачи методами динамического программирования (!!!)
-        int result = 0;
+        int[] dp = new int[n];
+        int[] prev = new int[n];
+        Arrays.fill(dp, 1);
+        Arrays.fill(prev, -1);
+
+        int maxLen = 1;
+        int lastIndex = 0;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (m[j] >= m[i] && dp[j] + 1 > dp[i]) {
+                    dp[i] = dp[j] + 1;
+                    prev[i] = j;
+                }
+            }
+            if (dp[i] > maxLen) {
+                maxLen = dp[i];
+                lastIndex = i;
+            }
+        }
+
+        // Восстанавливаем индексы
+        ArrayList<Integer> sequence = new ArrayList<>();
+        int current = lastIndex;
+        while (current != -1) {
+            sequence.add(current + 1); // индексация с 1
+            current = prev[current];
+        }
+        Collections.reverse(sequence);
+
+        // выводим ответ в формате задачи
+        System.out.println(maxLen);
+        for (int index : sequence) {
+            System.out.print(index + " ");
+        }
+        System.out.println();
 
 
         //!!!!!!!!!!!!!!!!!!!!!!!!!     КОНЕЦ ЗАДАЧИ     !!!!!!!!!!!!!!!!!!!!!!!!!
-        return result;
+        return maxLen;
     }
 
 }
